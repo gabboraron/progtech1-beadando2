@@ -165,7 +165,7 @@ System.out.println("LOG gameTable:"+gameTable);
         boolean completed = true;
         int size = (int) sqrt(gameTable.size());
         
-        //SOR EGYSZÍNŰ
+        //ROW SAME COLOR
         boolean sameRowElems = true;
         int rIdx=0;
         while((rIdx<gameTable.size()) && (completed)){
@@ -187,7 +187,7 @@ System.out.println("LOG gameTable:"+gameTable);
         if(completed)
             return completed;
         
-        //OSZLOPOK EGYSZÍNŰ
+        //COLUMN SAME COLOR
         completed = true;
         int cIdx=0;
         boolean sameColumnElems = true;

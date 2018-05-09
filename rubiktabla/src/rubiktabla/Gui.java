@@ -8,6 +8,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -258,47 +259,47 @@ class Gui  extends JFrame{
         
         //for(int idx=0; idx<game.getGameTable().size(); ++idx){
         int idx=0;
-        while(idx<game.getGameTable().size()/*+game.getSize()*/){
+        while(idx<game.getGameTable().size()){
             if(idx == game.getSize()){                                     //first row -> the game buttons
-                addNavButton(gamePanel, "left");
+                addNavButton(gamePanel, "left", idx-1, game);
                 for(int tIdx=0; tIdx<game.getSize(); ++tIdx )    
                     addButton(gamePanel, game.gameTableIdxToColor(tIdx));
-                addNavButton(gamePanel, "right");
+                addNavButton(gamePanel, "right", idx-1, game);
             }
             
             if(idx == (game.getSize()*(game.getSize()-1))){                 //last row -> the game buttons
-                addNavButton(gamePanel, "left");
+                addNavButton(gamePanel, "left", idx, game);
                 for(int tIdx=game.getGameTable().size()-game.getSize(); tIdx<game.getGameTable().size(); ++tIdx )    
                     addButton(gamePanel, game.gameTableIdxToColor(tIdx));
-                addNavButton(gamePanel, "right");
+                addNavButton(gamePanel, "right", idx, game);
             }
             //if(addIfIsRemainingElement(tmpRemainIdx,idx)){
             /*if(((idx<=(game.getSize()*2)) && (idx>game.getSize())) || (idx>game.getGameTable().size())){
                 addIfIsRemainingElement(tmpRemainIdx,idx);
             }else */if(game.isEdge(idx).equals("up")){                          //first row -> nav buttons
-                addNavButton(gamePanel, "up");
+                addNavButton(gamePanel, "up", idx, game);
                 //addButton(gamePanel, game.gameTableIdxToColor(idx));
             }else if(game.isEdge(idx).equals("down")){                        //last row -> nav buttons
-                addNavButton(gamePanel, "down");
+                addNavButton(gamePanel, "down", idx, game);
                 //addButton(gamePanel, game.gameTableIdxToColor(idx));
             }else if(game.isEdge(idx).equals("left")){
-                addNavButton(gamePanel, "left");
+                addNavButton(gamePanel, "left", idx, game);
                 addButton(gamePanel, game.gameTableIdxToColor(idx));
             }else if(game.isEdge(idx).equals("right")){
                 addButton(gamePanel, game.gameTableIdxToColor(idx));
-                addNavButton(gamePanel, "right");
+                addNavButton(gamePanel, "right", idx, game);
             }else if(game.isEdge(idx).equals("leftup")){
-                addNavButton(gamePanel, "leftup");
+                addNavButton(gamePanel, "leftup", idx, game);
                 //addButton(gamePanel, game.gameTableIdxToColor(idx));
             }else if(game.isEdge(idx).equals("rightup")){
-                addNavButton(gamePanel, "rightup");
+                addNavButton(gamePanel, "rightup", idx, game);
                 //addButton(gamePanel, game.gameTableIdxToColor(idx));
             }else if(game.isEdge(idx).equals("leftdown")){
                 //addButton(gamePanel, game.gameTableIdxToColor(idx));
-                addNavButton(gamePanel, "leftdown");
+                addNavButton(gamePanel, "leftdown", idx, game);
             }else if(game.isEdge(idx).equals("rightdown")){
                 //addButton(gamePanel, game.gameTableIdxToColor(idx));
-                addNavButton(gamePanel, "rightdown");
+                addNavButton(gamePanel, "rightdown", idx, game);
             }else{
                 addButton(gamePanel, game.gameTableIdxToColor(idx));
                 //addButton(gamePanel, Integer.toString((int) game.getGameTable().get(idx) ), game);
@@ -340,38 +341,78 @@ class Gui  extends JFrame{
     }
     
     /**
-     * Add a navigation button to panel. Navigation button looks like this: ▲
+     * Add a navigation button to panel. Navigation button looks like this: ▲▼◄►
+     * Each navigation button have an action listener, ehat will change the game table as the button value if the button is clicked.
      * 
      * @param gamePanel a JPanel value. The button will be added to this panel.
      * @param dir a String value. This could be: up, down, left, right, leftup, rightup, leftdown, rightdown
+     * @param idx index of this button in gameTable
+     * @see gameTable
+     * @param game the Game what will make the movements of the nav button
      */
-    private void addNavButton(JPanel gamePanel, String dir) {
+    private void addNavButton(JPanel gamePanel, String dir, int idx, Game game) {
         //JButton button = null;
         JButton button = new JButton();
         switch (dir){
             case "up":
                     button = new JButton("▲");
                     //button.setBackground(Color.black);
-                    System.out.println("LOG\t addNavButton " + dir);
-                    //remainElem.add(game.getGameTable().get(navBtnIdx));
+                    System.out.println("LOG\t addNavButton @"+idx +" @ "+ dir);
+                    button.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            System.err.println(dir+" clicked, with " + idx);
+                            game.moveByColumnUp(idx);
+                            //stopIfIsCompleted();
+                            //refreshGUI();
+                        }
+                    });
                     break;
             case "down":
                     //button.setBackground(Color.green);
                     button = new JButton("▼");
                     //button.setBackground(Color.black);
-                    System.out.println("LOG\t addNavButton " + dir);
+                    System.out.println("LOG\t addNavButton @"+idx +" @ "+ dir);
+                    button.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            System.err.println(dir+" clicked, with " + idx);
+                            game.moveByColumnDown(idx);
+                            //stopIfIsCompleted();
+                            //refreshGUI();
+                        }
+                    });
                     break;
             case "left":
                     //button.setBackground(Color.yellow);
                     button = new JButton("◄");
                     //button.setBackground(Color.black);
-                    System.out.println("LOG\t addNavButton " + dir);
+                    System.out.println("LOG\t addNavButton @"+idx +" @ "+ dir);
+                    button.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            System.err.println(dir+" clicked, with " + idx);
+                            game.moveByRowLeft(idx);
+                            //stopIfIsCompleted();
+                            //refreshGUI();
+                        }
+                    });
                     break;
             case "right":
                     //button.setBackground(Color.orange);
                     button = new JButton("►");
                     //button.setBackground(Color.black);
-                    System.out.println("LOG\t addNavButton " + dir);
+                    System.out.println("LOG\t addNavButton @"+idx +" @ "+ dir);
+                    
+                    button.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            System.err.println(dir+" clicked, with " + idx);
+                            game.moveByRowRight(idx);
+                            //stopIfIsCompleted();
+                            //refreshGUI();
+                        }
+                    });
                     break;
             case "leftup":
                     //button.setBackground(Color.blue);
@@ -380,15 +421,34 @@ class Gui  extends JFrame{
                     gamePanel.add(button);
                     button = new JButton("▲");
                     
-                    System.out.println("LOG\t addNavButton " + dir);
+                    System.out.println("LOG\t addNavButton @"+idx +" @ "+ dir);
+                    button.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            System.err.println(dir+" clicked, with " + idx);                            
+                            game.moveByColumnUp(idx);
+                            //stopIfIsCompleted();
+                            //refreshGUI();
+                        }
+                    });
                     break;
             case "rightup":
                     //button.setBackground(Color.white);
                     button = new JButton("▲");
+                    button.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            System.err.println(dir+" clicked, with " + idx);                            
+                            game.moveByColumnUp(idx);
+                            //stopIfIsCompleted();
+                            //refreshGUI();
+                        }
+                    });
                     gamePanel.add(button);
+                    
                     button = new JButton();
                     button.setBackground(Color.gray);
-                    System.out.println("LOG\t addNavButton " + dir);
+                    System.out.println("LOG\t addNavButton @"+idx +" @ "+ dir);
                     break;
             case "leftdown":
                     //button.setBackground(Color.white);
@@ -396,15 +456,34 @@ class Gui  extends JFrame{
                     button.setBackground(Color.gray);
                     gamePanel.add(button);
                     button = new JButton("▼");
-                    System.out.println("LOG\t addNavButton " + dir);
+                    System.out.println("LOG\t addNavButton @"+idx +" @ "+ dir);
+                    button.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            System.err.println(dir+" clicked, with " + idx);                            
+                            game.moveByColumnDown(idx);
+                            //stopIfIsCompleted();
+                            //refreshGUI();
+                        }
+                    });
                     break;
             case "rightdown":
                     //button.setBackground(Color.white);
                     button = new JButton("▼");
                     gamePanel.add(button);
+                    button.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            System.err.println(dir+" clicked, with " + idx);                            
+                            game.moveByColumnDown(idx);
+                            //stopIfIsCompleted();
+                            //refreshGUI();
+                        }
+                    });
+                    
                     button = new JButton();
                     button.setBackground(Color.gray);
-                    System.out.println("LOG\t addNavButton " + dir);
+                    System.out.println("LOG\t addNavButton @"+idx +" @ "+ dir);
                     break;
         }
         gamePanel.add(button);
