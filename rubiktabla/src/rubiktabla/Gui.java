@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Vector;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -56,7 +57,7 @@ class Gui  extends JFrame{
         java.net.URL    url = Rubiktabla.class.getResource("icon.png");
         setIconImage(Toolkit.getDefaultToolkit().getImage(url));
         setTitle("Rubik Tábla");
-        setMinimumSize(new Dimension(400, 450));
+        setMinimumSize(new Dimension(500, 500));
         pack();
         setVisible(true);
     }
@@ -252,35 +253,43 @@ class Gui  extends JFrame{
      * @return gamePanel, a JPanel value
      */
     private JPanel showGame(JPanel gamePanel, Game game) {
-        for(int idx=0; idx<game.getGameTable().size(); ++idx){
-            if(game.isEdge(idx).equals("up")){                          //first row
-                addNavButton(idx, "up");
-                addButton(gamePanel, game.gameTableIdxToColor(idx));
-            }else if(game.isEdge(idx).equals("down")){
-                addButton(gamePanel, game.gameTableIdxToColor(idx));
-                //addNavButton(idx, "down");
+        Vector tmpRemainIdx = new Vector();        
+        
+        //for(int idx=0; idx<game.getGameTable().size(); ++idx){
+        int idx=0;
+        while(idx<game.getGameTable().size()/*+game.getSize()*/){
+            //if(addIfIsRemainingElement(tmpRemainIdx,idx)){
+            /*if(((idx<=(game.getSize()*2)) && (idx>game.getSize())) || (idx>game.getGameTable().size())){
+                addIfIsRemainingElement(tmpRemainIdx,idx);
+            }else */if(game.isEdge(idx).equals("up")){                          //first row
+                addNavButton(game, tmpRemainIdx, gamePanel, idx, "up");
+                //addButton(gamePanel, game.gameTableIdxToColor(idx));
+            }else if(game.isEdge(idx).equals("down")){                        //last row
+                addNavButton(game, tmpRemainIdx, gamePanel, idx, "down");
+                //addButton(gamePanel, game.gameTableIdxToColor(idx));
             }else if(game.isEdge(idx).equals("left")){
-                //addNavButton(idx, "left");
+                addNavButton(game, tmpRemainIdx, gamePanel, idx, "left");
                 addButton(gamePanel, game.gameTableIdxToColor(idx));
             }else if(game.isEdge(idx).equals("right")){
                 addButton(gamePanel, game.gameTableIdxToColor(idx));
-                //addNavButton(idx, "right");
+                addNavButton(game, tmpRemainIdx, gamePanel, idx, "right");
             }else if(game.isEdge(idx).equals("leftup")){
-                addButton(gamePanel, game.gameTableIdxToColor(idx));
-                //addNavButton(idx, "leftup");
+                addNavButton(game, tmpRemainIdx, gamePanel, idx, "leftup");
+                //addButton(gamePanel, game.gameTableIdxToColor(idx));
             }else if(game.isEdge(idx).equals("rightup")){
-                addButton(gamePanel, game.gameTableIdxToColor(idx));
-                //addNavButton(idx, "rightup");
+                addNavButton(game, tmpRemainIdx, gamePanel, idx, "rightup");
+                //addButton(gamePanel, game.gameTableIdxToColor(idx));
             }else if(game.isEdge(idx).equals("leftdown")){
-                addButton(gamePanel, game.gameTableIdxToColor(idx));
-                //addNavButton(idx, "leftdown");
+                //addButton(gamePanel, game.gameTableIdxToColor(idx));
+                addNavButton(game, tmpRemainIdx, gamePanel, idx, "leftdown");
             }else if(game.isEdge(idx).equals("rightdown")){
-                addButton(gamePanel, game.gameTableIdxToColor(idx));
-                //addNavButton(idx, "rightdown");
+                //addButton(gamePanel, game.gameTableIdxToColor(idx));
+                addNavButton(game, tmpRemainIdx, gamePanel, idx, "rightdown");
             }else{
                 addButton(gamePanel, game.gameTableIdxToColor(idx));
                 //addButton(gamePanel, Integer.toString((int) game.getGameTable().get(idx) ), game);
             }
+            ++idx;
         }
         return gamePanel;
     }
@@ -316,39 +325,76 @@ class Gui  extends JFrame{
         gamePanel.add(button);
     }
 
-    private void addNavButton(int navBtnIdx, String dir) {
-        /*JButton button = null;
+    private void addNavButton(Game game, Vector remainElem, JPanel gamePanel, int navBtnIdx, String dir) {
+        //JButton button = null;
+        JButton button = new JButton();
         switch (dir){
             case "up":
-                    ImageIcon icon = new ImageIcon("icon.png");
-                    //java.net.URL    url = Rubiktabla.class.getResource("icon.png");
-                    //setIconImage(Toolkit.getDefaultToolkit().getImage(url));
-                    //ImageIcon image = new ImageIcon("C:/desing/0.png");
-                    //button.setIcon((Icon) Toolkit.getDefaultToolkit().getImage(url));
-                    button = new JButton("^",icon);
+                    button = new JButton("▲");
+                    //button.setBackground(Color.black);
+                    System.out.println("LOG\t addNavButton " + dir);
+                    remainElem.add(game.getGameTable().get(navBtnIdx));
                     break;
-            case "green":
+            case "down":
                     //button.setBackground(Color.green);
-                    button = new JButton();
+                    button = new JButton("▼");
+                    //button.setBackground(Color.black);
+                    System.out.println("LOG\t addNavButton " + dir);
                     break;
-            case "yellow":
+            case "left":
                     //button.setBackground(Color.yellow);
-                    button = new JButton();
+                    button = new JButton("◄");
+                    //button.setBackground(Color.black);
+                    System.out.println("LOG\t addNavButton " + dir);
                     break;
-            case "orange":
+            case "right":
                     //button.setBackground(Color.orange);
-                    button = new JButton();
+                    button = new JButton("►");
+                    //button.setBackground(Color.black);
+                    System.out.println("LOG\t addNavButton " + dir);
                     break;
-            case "blue":
+            case "leftup":
                     //button.setBackground(Color.blue);
-                    button = new JButton();
+                    //button = new JButton();
+                    button.setBackground(Color.gray);
+                    gamePanel.add(button);
+                    button = new JButton("▲");
+                    
+                    System.out.println("LOG\t addNavButton " + dir);
                     break;
-            case "white":
+            case "rightup":
+                    //button.setBackground(Color.white);
+                    button = new JButton("▲");
+                    gamePanel.add(button);
+                    button = new JButton();
+                    button.setBackground(Color.gray);
+                    System.out.println("LOG\t addNavButton " + dir);
+                    break;
+            case "leftdown":
                     //button.setBackground(Color.white);
                     button = new JButton();
+                    button.setBackground(Color.gray);
+                    gamePanel.add(button);
+                    button = new JButton("▼");
+                    System.out.println("LOG\t addNavButton " + dir);
+                    break;
+            case "rightdown":
+                    //button.setBackground(Color.white);
+                    button = new JButton("▼");
+                    gamePanel.add(button);
+                    button = new JButton();
+                    button.setBackground(Color.gray);
+                    System.out.println("LOG\t addNavButton " + dir);
                     break;
         }
-        gamePanel.add(button);*/
-        System.out.println("LOG\t navbutton: "+dir);
+        gamePanel.add(button);
+    }
+
+    private boolean addIfIsRemainingElement(Vector tmpRemainIdx, int idx) {
+        boolean is = false;
+        
+        if(!tmpRemainIdx.isEmpty())
+            is = true;
+        return is;
     }
 }
