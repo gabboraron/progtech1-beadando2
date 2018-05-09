@@ -321,33 +321,65 @@ System.out.println("LOG gameTable:"+gameTable);
     String isEdge(int idx) {
         String is = "";
         boolean found = false;
-        
+
         //first row
         if (idx < size) {
             is = "up";
             found = true;
         }
 
-        //right side
+        //left side
         if ((!found) && ((idx % size) == 0.0)) {
-            is = "right";
+            is = "left";
             found = true;
         }
 
-        //left side
-        if(!found)
-            for (int tIdx = 0; tIdx < size; ++tIdx){
+        //right side
+        if (!found) {
+            for (int tIdx = 0; tIdx < size; ++tIdx) {
                 if ((!found) && (tIdx * size - 1 == idx)) {
-                    is = "left";
+                    is = "right";
                     found = true;
                 }
             }
-        
+        }
+
         //last row 
         if ((!found) && (idx >= gameTable.size() - size)) {
             is = "down";
             found = true;
         }
+        
+        //left-up corner
+        if(size == 2 ){                     //  2X2
+            if(idx == 0)
+                is = "leftup";
+            else if(idx == 1)
+                is = "rightup";
+            else if(idx == 2)
+                is = "leftdown";
+            else if(idx == 3)
+                is = "rightdown";  
+        } else if(size == 4 ){              //  4X4
+            if(idx == 0)
+                is = "leftup";
+            else if(idx == 3)
+                is = "rightup";
+            else if(idx == 12)
+                is = "leftdown";
+            else if(idx == 15)
+                is = "rightdown";  
+        } else if(size == 6 ){              //  6X6
+            if(idx == 0)
+                is = "leftup";
+            else if(idx == 5)
+                is = "rightup";
+            else if(idx == 30)
+                is = "leftdown";
+            else if(idx == 35)
+                is = "rightdown";  
+        }
+        
         System.out.println(idx + "is on edge: " + is);
         return is;
     }
