@@ -9,9 +9,9 @@ import java.util.Vector;
  * @author Burian Sándor
  */
 public class Game {
-    private int size;
-    private Vector gameTable;
-    public int steps;
+    private int size;           //the size of one edge
+    private Vector gameTable;   //the matrix of the game table
+    public int steps;           //nr of steps
     
     /** 
      * Create new game
@@ -146,6 +146,15 @@ System.out.println("LOG gameTable:"+gameTable);
     public Vector getGameTable() {
         return gameTable;
     }
+
+    /**
+     * Get the size of game Table.
+     * This is only one row/column size, not the size of the gameTable vector!
+     * @return the size in an int value
+     */
+    public int getSize() {
+        return size;
+    }
     
     /**
      * Get the game status
@@ -203,6 +212,143 @@ System.out.println("LOG gameTable:"+gameTable);
      * @param rowIdx the first element index of the row
      */
     void moveByRowLeft(int rowIdx){
+        Vector tmp = new Vector();
+        int tIdx = rowIdx;
+        int tmpRowSizeIdx = 0;
+        while(tmpRowSizeIdx<size){
+            tmp.add(gameTable.get(tIdx));
+            ++tIdx;     
+            ++tmpRowSizeIdx;
+        }
         
+        tIdx = 1;
+        int vIdx = rowIdx;
+        while(tIdx<tmp.size()){
+            gameTable.set(vIdx, tmp.get(tIdx));
+            ++tIdx;
+            ++vIdx;
+        }
+        gameTable.set(vIdx, tmp.get(0));
+        //System.out.println("LOG\ttmp vector: "+tmp);
+        System.out.println("LOG\tgameTable after mBRL: "+gameTable);
+    }
+    
+    /**
+     * Move by an row right
+     * @param rowIdx the first element index of the row
+     */
+    void moveByRowRight(int rowIdx){
+        Vector tmp = new Vector();
+        int tIdx = rowIdx;
+        int tmpRowSizeIdx = 0;
+        while(tmpRowSizeIdx<size){
+            tmp.add(gameTable.get(tIdx));
+            ++tIdx;     
+            ++tmpRowSizeIdx;
+        }
+        
+        tIdx = 0;
+        int vIdx = rowIdx+1;
+        while(tIdx<tmp.size()-1){
+            gameTable.set(vIdx, tmp.get(tIdx));
+            ++tIdx;
+            ++vIdx;
+        }
+        gameTable.set(rowIdx, tmp.get(tIdx));
+        //System.out.println("LOG\ttmp vector: "+tmp);
+        System.out.println("LOG\tgameTable after mBRR: "+gameTable);
+    }
+    
+    /**
+     * Move by a column up
+     * @param rowIdx the first element index of the column
+     */
+    void moveByColumnUp(int colIdx){
+        Vector tmp = new Vector();
+        int tIdx = colIdx;
+        int tmpColSizeIdx = 0;
+        while(tmpColSizeIdx<size){
+            tmp.add(gameTable.get(tIdx));
+            tIdx+=size;     
+            ++tmpColSizeIdx;
+        }
+        
+        tIdx = 1;
+        int vIdx = colIdx;
+        while(tIdx<tmp.size()){
+            gameTable.set(vIdx, tmp.get(tIdx));
+            ++tIdx;
+           vIdx+=size;
+        }
+        gameTable.set(vIdx, tmp.get(0));
+        System.out.println("LOG\ttmp vector: "+tmp);
+        System.out.println("LOG\tgameTable after mBCU: "+gameTable);
+    }
+    
+    /**
+     * Move by a column down
+     * @param rowIdx the first element index of the column
+     */
+    void moveByColumnDown(int colIdx){
+        Vector tmp = new Vector();
+        int tIdx = colIdx;
+        int tmpColSizeIdx = 0;
+        while(tmpColSizeIdx<size){
+            tmp.add(gameTable.get(tIdx));
+            tIdx+=size;     
+            ++tmpColSizeIdx;
+        }
+        
+        tIdx = 0;
+        int vIdx = colIdx+size;
+        while(tIdx<tmp.size()-1){
+            gameTable.set(vIdx, tmp.get(tIdx));
+            ++tIdx;
+           vIdx+=size;
+        }
+        gameTable.set(colIdx, tmp.get(tIdx));
+        System.out.println("LOG\ttmp vector: "+tmp);
+        System.out.println("LOG\tgameTable after mBCU: "+gameTable);
+    }
+
+    /**
+     * Get if the element is on the edge of game table. An elem is on edge if is in first row or in
+     * last row, or in first column, or in last column.
+     * 
+     * @param idx the index of elem. The index is from gameTable.
+     * @return String value, "up" if is the first row, "down" if is the last row, "left" if is the left edge of the game table, "right if is the right edge of game table.
+     */
+    String isEdge(int idx) {
+        String is = "";
+        boolean found = false;
+        
+        //first row
+        if (idx < size) {
+            is = "up";
+            found = true;
+        }
+
+        //right side
+        if ((!found) && ((idx % size) == 0.0)) {
+            is = "right";
+            found = true;
+        }
+
+        //left side
+        if(!found)
+            for (int tIdx = 0; tIdx < size; ++tIdx){
+                if ((!found) && (tIdx * size - 1 == idx)) {
+                    is = "left";
+                    found = true;
+                }
+            }
+        
+        //last row 
+        if ((!found) && (idx >= gameTable.size() - size)) {
+            is = "down";
+            found = true;
+        }
+        System.out.println(idx + "is on edge: " + is);
+        return is;
     }
 }

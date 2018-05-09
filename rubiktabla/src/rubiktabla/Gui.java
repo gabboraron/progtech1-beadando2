@@ -12,6 +12,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.AbstractAction;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -233,8 +235,13 @@ class Gui  extends JFrame{
         
         
         getContentPane().add(gamePanel, BorderLayout.CENTER);
-        //System.out.println("LOG\t gamePanel: "+gamePanel);
-        System.out.println("LOG\t game completed: " + game.isCompleted());
+        
+
+        // TEST
+        //game.moveByRowLeft(2);
+        //game.moveByRowRight(2);
+        //game.moveByColumnUp(1);
+        //game.moveByColumnDown(1);
     }    
 
     /**
@@ -246,8 +253,23 @@ class Gui  extends JFrame{
      */
     private JPanel showGame(JPanel gamePanel, Game game) {
         for(int idx=0; idx<game.getGameTable().size(); ++idx){
-            addButton(gamePanel, game.gameTableIdxToColor(idx));
-            //addButton(gamePanel, Integer.toString((int) game.getGameTable().get(idx) ), game);
+            if(game.isEdge(idx).equals("up")){
+                //first row
+                addNavButton(idx, "up");
+                addButton(gamePanel, game.gameTableIdxToColor(idx));
+            }else if(game.isEdge(idx).equals("down")){
+                addButton(gamePanel, game.gameTableIdxToColor(idx));
+                //addNavButton(idx, "down");
+            }else if(game.isEdge(idx).equals("left")){
+                //addNavButton(idx, "left");
+                addButton(gamePanel, game.gameTableIdxToColor(idx));
+            }else if(game.isEdge(idx).equals("right")){
+                addButton(gamePanel, game.gameTableIdxToColor(idx));
+                //addNavButton(idx, "right");
+            }else{
+                addButton(gamePanel, game.gameTableIdxToColor(idx));
+                //addButton(gamePanel, Integer.toString((int) game.getGameTable().get(idx) ), game);
+            }
         }
         return gamePanel;
     }
@@ -281,5 +303,41 @@ class Gui  extends JFrame{
                     break;
         }
         gamePanel.add(button);
+    }
+
+    private void addNavButton(int navBtnIdx, String dir) {
+        /*JButton button = null;
+        switch (dir){
+            case "up":
+                    ImageIcon icon = new ImageIcon("icon.png");
+                    //java.net.URL    url = Rubiktabla.class.getResource("icon.png");
+                    //setIconImage(Toolkit.getDefaultToolkit().getImage(url));
+                    //ImageIcon image = new ImageIcon("C:/desing/0.png");
+                    //button.setIcon((Icon) Toolkit.getDefaultToolkit().getImage(url));
+                    button = new JButton("^",icon);
+                    break;
+            case "green":
+                    //button.setBackground(Color.green);
+                    button = new JButton();
+                    break;
+            case "yellow":
+                    //button.setBackground(Color.yellow);
+                    button = new JButton();
+                    break;
+            case "orange":
+                    //button.setBackground(Color.orange);
+                    button = new JButton();
+                    break;
+            case "blue":
+                    //button.setBackground(Color.blue);
+                    button = new JButton();
+                    break;
+            case "white":
+                    //button.setBackground(Color.white);
+                    button = new JButton();
+                    break;
+        }
+        gamePanel.add(button);*/
+        System.out.println("LOG\t navbutton: "+dir);
     }
 }
