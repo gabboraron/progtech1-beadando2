@@ -258,6 +258,12 @@ class Gui  extends JFrame{
         //for(int idx=0; idx<game.getGameTable().size(); ++idx){
         int idx=0;
         while(idx<game.getGameTable().size()/*+game.getSize()*/){
+            if(idx == game.getSize()){
+                addNavButton(game, tmpRemainIdx, gamePanel, idx, "left");
+                for(int tIdx=0; tIdx<game.getSize(); ++tIdx )    
+                    addButton(gamePanel, game.gameTableIdxToColor(tIdx));
+                addNavButton(game, tmpRemainIdx, gamePanel, idx, "right");
+            }
             //if(addIfIsRemainingElement(tmpRemainIdx,idx)){
             /*if(((idx<=(game.getSize()*2)) && (idx>game.getSize())) || (idx>game.getGameTable().size())){
                 addIfIsRemainingElement(tmpRemainIdx,idx);
