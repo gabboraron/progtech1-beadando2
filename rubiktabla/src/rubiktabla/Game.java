@@ -281,7 +281,7 @@ System.out.println("LOG gameTable:"+gameTable);
            vIdx+=size;
         }
         gameTable.set(vIdx, tmp.get(0));
-        System.out.println("LOG\ttmp vector: "+tmp);
+        //System.out.println("LOG\ttmp vector: "+tmp);
         System.out.println("LOG\tgameTable after mBCU: "+gameTable);
     }
     
@@ -307,8 +307,8 @@ System.out.println("LOG gameTable:"+gameTable);
            vIdx+=size;
         }
         gameTable.set(colIdx, tmp.get(tIdx));
-        System.out.println("LOG\ttmp vector: "+tmp);
-        System.out.println("LOG\tgameTable after mBCU: "+gameTable);
+        //System.out.println("LOG\ttmp vector: "+tmp);
+        System.out.println("LOG\tgameTable after mBCD: "+gameTable);
     }
 
     /**

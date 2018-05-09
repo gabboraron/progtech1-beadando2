@@ -32,7 +32,6 @@ import javax.swing.SwingConstants;
  * @author Burian Sándor
  */
 class Gui  extends JFrame{
-    private int     érték;
     private JLabel  welcomeMsg;
     private JLabel  nrOfSteps;
     private JPanel  gamePanel;
@@ -49,7 +48,6 @@ class Gui  extends JFrame{
         //twiceADouble.setEnabled(false);
         setLayout(new BorderLayout());
         JPanel  gombok = new JPanel(new FlowLayout());
-        érték = 0;
         welcomeMsg = new JLabel("Állíts be méretet!", SwingConstants.CENTER);
         //gombok.add(new JButton(kattintásakció));
         gombok.add(new JButton(exitAction));
@@ -143,23 +141,20 @@ class Gui  extends JFrame{
         }
     };
 
-    private AbstractAction  kattintásakció = new AbstractAction("Kattintás")
-    {
-        @Override
-        public void actionPerformed(ActionEvent e)
-        {
-            érték++;
-            nrOfSteps.setText("Lépések száma: " + érték);
-            //twiceADouble.setEnabled(true);
-        }
-    };
+    /**
+     * Increase the number of steps in game.steps, and show it in label nrOfSteps
+     */
+    private void click (){
+            game.steps++;
+            nrOfSteps.setText("Lépések száma: " +  game.steps);
+            
+    }
 
 	private AbstractAction twiceADouble = new AbstractAction("2X2")
 	{
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            érték = 0;
             nrOfSteps.setText("Lépések száma: 0");
             //setEnabled(false);
             game = new Game(2);
@@ -178,7 +173,6 @@ class Gui  extends JFrame{
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            érték = 0;
             nrOfSteps.setText("Lépések száma: 0");
             //setEnabled(false);
             game = new Game(4);
@@ -197,7 +191,6 @@ class Gui  extends JFrame{
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            érték = 0;
             nrOfSteps.setText("Lépések száma: 0");
             //setEnabled(false);
             game = new Game(6);
@@ -280,7 +273,7 @@ class Gui  extends JFrame{
                 addNavButton(gamePanel, "up", idx, game);
                 //addButton(gamePanel, game.gameTableIdxToColor(idx));
             }else if(game.isEdge(idx).equals("down")){                        //last row -> nav buttons
-                addNavButton(gamePanel, "down", idx, game);
+                addNavButton(gamePanel, "down", (game.getSize()*game.getSize())-idx, game);
                 //addButton(gamePanel, game.gameTableIdxToColor(idx));
             }else if(game.isEdge(idx).equals("left")){
                 addNavButton(gamePanel, "left", idx, game);
@@ -296,10 +289,10 @@ class Gui  extends JFrame{
                 //addButton(gamePanel, game.gameTableIdxToColor(idx));
             }else if(game.isEdge(idx).equals("leftdown")){
                 //addButton(gamePanel, game.gameTableIdxToColor(idx));
-                addNavButton(gamePanel, "leftdown", idx, game);
+                addNavButton(gamePanel, "leftdown", 0, game);
             }else if(game.isEdge(idx).equals("rightdown")){
                 //addButton(gamePanel, game.gameTableIdxToColor(idx));
-                addNavButton(gamePanel, "rightdown", idx, game);
+                addNavButton(gamePanel, "rightdown", game.getSize()-1, game);
             }else{
                 addButton(gamePanel, game.gameTableIdxToColor(idx));
                 //addButton(gamePanel, Integer.toString((int) game.getGameTable().get(idx) ), game);
@@ -362,8 +355,9 @@ class Gui  extends JFrame{
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             System.err.println(dir+" clicked, with " + idx);
+                            click();
                             game.moveByColumnUp(idx);
-                            //stopIfIsCompleted();
+                            stopIfIsCompleted(gamePanel,game);
                             //refreshGUI();
                         }
                     });
@@ -377,8 +371,9 @@ class Gui  extends JFrame{
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             System.err.println(dir+" clicked, with " + idx);
+                            click();
                             game.moveByColumnDown(idx);
-                            //stopIfIsCompleted();
+                            stopIfIsCompleted(gamePanel,game);
                             //refreshGUI();
                         }
                     });
@@ -392,8 +387,9 @@ class Gui  extends JFrame{
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             System.err.println(dir+" clicked, with " + idx);
+                            click();
                             game.moveByRowLeft(idx);
-                            //stopIfIsCompleted();
+                            stopIfIsCompleted(gamePanel,game);
                             //refreshGUI();
                         }
                     });
@@ -408,8 +404,9 @@ class Gui  extends JFrame{
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             System.err.println(dir+" clicked, with " + idx);
+                            click();
                             game.moveByRowRight(idx);
-                            //stopIfIsCompleted();
+                            stopIfIsCompleted(gamePanel,game);
                             //refreshGUI();
                         }
                     });
@@ -426,8 +423,9 @@ class Gui  extends JFrame{
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             System.err.println(dir+" clicked, with " + idx);                            
+                            click();
                             game.moveByColumnUp(idx);
-                            //stopIfIsCompleted();
+                            stopIfIsCompleted(gamePanel,game);
                             //refreshGUI();
                         }
                     });
@@ -439,8 +437,9 @@ class Gui  extends JFrame{
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             System.err.println(dir+" clicked, with " + idx);                            
+                            click();
                             game.moveByColumnUp(idx);
-                            //stopIfIsCompleted();
+                            stopIfIsCompleted(gamePanel,game);
                             //refreshGUI();
                         }
                     });
@@ -461,8 +460,9 @@ class Gui  extends JFrame{
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             System.err.println(dir+" clicked, with " + idx);                            
+                            click();
                             game.moveByColumnDown(idx);
-                            //stopIfIsCompleted();
+                            stopIfIsCompleted(gamePanel,game);
                             //refreshGUI();
                         }
                     });
@@ -475,8 +475,9 @@ class Gui  extends JFrame{
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             System.err.println(dir+" clicked, with " + idx);                            
+                            click();
                             game.moveByColumnDown(idx);
-                            //stopIfIsCompleted();
+                            stopIfIsCompleted(gamePanel,game);
                             //refreshGUI();
                         }
                     });
@@ -487,5 +488,17 @@ class Gui  extends JFrame{
                     break;
         }
         gamePanel.add(button);
+    }
+    
+    private void stopIfIsCompleted(JPanel gamePanel, Game game) {
+        if(game.isCompleted()){
+            gamePanel.removeAll();
+            JLabel nrOfSteps = new JLabel("Nyertél!\nLépéseid száma: "+game.steps, SwingConstants.CENTER);
+            gamePanel.add(nrOfSteps);
+            
+            sixTimesSix.setEnabled(true);
+            fourTimesFour.setEnabled(true);
+            twiceADouble.setEnabled(true);
+        }
     }
 }
