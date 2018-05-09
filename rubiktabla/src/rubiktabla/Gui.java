@@ -221,6 +221,7 @@ class Gui  extends JFrame{
         
     /**
      * Draw table to the panel, hide the welcome text.
+     * Set game table size.
      * 
      * @param game a Game value
      * @param size of the game, an int
@@ -230,7 +231,7 @@ class Gui  extends JFrame{
         //getContentPane().remove(gamePanel);
         JPanel gamePanel;
         gamePanel = new JPanel();
-        gamePanel.setLayout(new GridLayout(size, size));
+        gamePanel.setLayout(new GridLayout(size+2, size+2));
         
         gamePanel = showGame(gamePanel, game);
         
@@ -258,39 +259,46 @@ class Gui  extends JFrame{
         //for(int idx=0; idx<game.getGameTable().size(); ++idx){
         int idx=0;
         while(idx<game.getGameTable().size()/*+game.getSize()*/){
-            if(idx == game.getSize()){
-                addNavButton(game, tmpRemainIdx, gamePanel, idx, "left");
+            if(idx == game.getSize()){                                     //first row -> the game buttons
+                addNavButton(gamePanel, "left");
                 for(int tIdx=0; tIdx<game.getSize(); ++tIdx )    
                     addButton(gamePanel, game.gameTableIdxToColor(tIdx));
-                addNavButton(game, tmpRemainIdx, gamePanel, idx, "right");
+                addNavButton(gamePanel, "right");
+            }
+            
+            if(idx == (game.getSize()*(game.getSize()-1))){                 //last row -> the game buttons
+                addNavButton(gamePanel, "left");
+                for(int tIdx=game.getGameTable().size()-game.getSize(); tIdx<game.getGameTable().size(); ++tIdx )    
+                    addButton(gamePanel, game.gameTableIdxToColor(tIdx));
+                addNavButton(gamePanel, "right");
             }
             //if(addIfIsRemainingElement(tmpRemainIdx,idx)){
             /*if(((idx<=(game.getSize()*2)) && (idx>game.getSize())) || (idx>game.getGameTable().size())){
                 addIfIsRemainingElement(tmpRemainIdx,idx);
-            }else */if(game.isEdge(idx).equals("up")){                          //first row
-                addNavButton(game, tmpRemainIdx, gamePanel, idx, "up");
+            }else */if(game.isEdge(idx).equals("up")){                          //first row -> nav buttons
+                addNavButton(gamePanel, "up");
                 //addButton(gamePanel, game.gameTableIdxToColor(idx));
-            }else if(game.isEdge(idx).equals("down")){                        //last row
-                addNavButton(game, tmpRemainIdx, gamePanel, idx, "down");
+            }else if(game.isEdge(idx).equals("down")){                        //last row -> nav buttons
+                addNavButton(gamePanel, "down");
                 //addButton(gamePanel, game.gameTableIdxToColor(idx));
             }else if(game.isEdge(idx).equals("left")){
-                addNavButton(game, tmpRemainIdx, gamePanel, idx, "left");
+                addNavButton(gamePanel, "left");
                 addButton(gamePanel, game.gameTableIdxToColor(idx));
             }else if(game.isEdge(idx).equals("right")){
                 addButton(gamePanel, game.gameTableIdxToColor(idx));
-                addNavButton(game, tmpRemainIdx, gamePanel, idx, "right");
+                addNavButton(gamePanel, "right");
             }else if(game.isEdge(idx).equals("leftup")){
-                addNavButton(game, tmpRemainIdx, gamePanel, idx, "leftup");
+                addNavButton(gamePanel, "leftup");
                 //addButton(gamePanel, game.gameTableIdxToColor(idx));
             }else if(game.isEdge(idx).equals("rightup")){
-                addNavButton(game, tmpRemainIdx, gamePanel, idx, "rightup");
+                addNavButton(gamePanel, "rightup");
                 //addButton(gamePanel, game.gameTableIdxToColor(idx));
             }else if(game.isEdge(idx).equals("leftdown")){
                 //addButton(gamePanel, game.gameTableIdxToColor(idx));
-                addNavButton(game, tmpRemainIdx, gamePanel, idx, "leftdown");
+                addNavButton(gamePanel, "leftdown");
             }else if(game.isEdge(idx).equals("rightdown")){
                 //addButton(gamePanel, game.gameTableIdxToColor(idx));
-                addNavButton(game, tmpRemainIdx, gamePanel, idx, "rightdown");
+                addNavButton(gamePanel, "rightdown");
             }else{
                 addButton(gamePanel, game.gameTableIdxToColor(idx));
                 //addButton(gamePanel, Integer.toString((int) game.getGameTable().get(idx) ), game);
@@ -330,8 +338,14 @@ class Gui  extends JFrame{
         }
         gamePanel.add(button);
     }
-
-    private void addNavButton(Game game, Vector remainElem, JPanel gamePanel, int navBtnIdx, String dir) {
+    
+    /**
+     * Add a navigation button to panel. Navigation button looks like this: ▲
+     * 
+     * @param gamePanel a JPanel value. The button will be added to this panel.
+     * @param dir a String value. This could be: up, down, left, right, leftup, rightup, leftdown, rightdown
+     */
+    private void addNavButton(JPanel gamePanel, String dir) {
         //JButton button = null;
         JButton button = new JButton();
         switch (dir){
@@ -339,7 +353,7 @@ class Gui  extends JFrame{
                     button = new JButton("▲");
                     //button.setBackground(Color.black);
                     System.out.println("LOG\t addNavButton " + dir);
-                    remainElem.add(game.getGameTable().get(navBtnIdx));
+                    //remainElem.add(game.getGameTable().get(navBtnIdx));
                     break;
             case "down":
                     //button.setBackground(Color.green);
@@ -394,13 +408,5 @@ class Gui  extends JFrame{
                     break;
         }
         gamePanel.add(button);
-    }
-
-    private boolean addIfIsRemainingElement(Vector tmpRemainIdx, int idx) {
-        boolean is = false;
-        
-        if(!tmpRemainIdx.isEmpty())
-            is = true;
-        return is;
     }
 }
