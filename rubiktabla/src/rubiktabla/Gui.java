@@ -222,7 +222,7 @@ class Gui  extends JFrame{
      */
     private void drawTable(Game game, int size){
         welcomeMsg.setVisible(false);
-        //getContentPane().remove(gamePanel);
+        getContentPane().remove(gamePanel);
         JPanel gamePanel;
         gamePanel = new JPanel();
         gamePanel.setLayout(new GridLayout(size+2, size+2));
@@ -358,7 +358,7 @@ class Gui  extends JFrame{
                             click();
                             game.moveByColumnUp(idx);
                             stopIfIsCompleted(gamePanel,game);
-                            //refreshGUI();
+                            drawTable(game,game.getSize());
                         }
                     });
                     break;
@@ -374,7 +374,8 @@ class Gui  extends JFrame{
                             click();
                             game.moveByColumnDown(idx);
                             stopIfIsCompleted(gamePanel,game);
-                            //refreshGUI();
+                            //refreshGUI(game);
+                            drawTable(game,game.getSize());
                         }
                     });
                     break;
@@ -391,6 +392,7 @@ class Gui  extends JFrame{
                             game.moveByRowLeft(idx);
                             stopIfIsCompleted(gamePanel,game);
                             //refreshGUI();
+                            drawTable(game,game.getSize());
                         }
                     });
                     break;
@@ -408,6 +410,7 @@ class Gui  extends JFrame{
                             game.moveByRowRight(idx);
                             stopIfIsCompleted(gamePanel,game);
                             //refreshGUI();
+                            drawTable(game,game.getSize());
                         }
                     });
                     break;
@@ -427,6 +430,7 @@ class Gui  extends JFrame{
                             game.moveByColumnUp(idx);
                             stopIfIsCompleted(gamePanel,game);
                             //refreshGUI();
+                            drawTable(game,game.getSize());
                         }
                     });
                     break;
@@ -441,6 +445,7 @@ class Gui  extends JFrame{
                             game.moveByColumnUp(idx);
                             stopIfIsCompleted(gamePanel,game);
                             //refreshGUI();
+                            drawTable(game,game.getSize());
                         }
                     });
                     gamePanel.add(button);
@@ -464,6 +469,7 @@ class Gui  extends JFrame{
                             game.moveByColumnDown(idx);
                             stopIfIsCompleted(gamePanel,game);
                             //refreshGUI();
+                            drawTable(game,game.getSize());
                         }
                     });
                     break;
@@ -479,6 +485,7 @@ class Gui  extends JFrame{
                             game.moveByColumnDown(idx);
                             stopIfIsCompleted(gamePanel,game);
                             //refreshGUI();
+                            drawTable(game,game.getSize());
                         }
                     });
                     
@@ -490,6 +497,11 @@ class Gui  extends JFrame{
         gamePanel.add(button);
     }
     
+    /**
+     * Show the stop msg if the game is completed. Show nr of steps, and the new game buttons are enabled now.
+     * @param gamePanel
+     * @param game 
+     */
     private void stopIfIsCompleted(JPanel gamePanel, Game game) {
         if(game.isCompleted()){
             gamePanel.removeAll();
@@ -501,4 +513,14 @@ class Gui  extends JFrame{
             twiceADouble.setEnabled(true);
         }
     }
+    
+    /**
+     * Refresh the GUI by deleting the old panel, and creating a new one.
+     */
+    /*public void refreshGUI(Game game) {
+        gamePanel.removeAll();
+        gamePanel.setLayout(new GridLayout(game.getSize()+2,game.getSize()+2));
+        JPanel tmpPane = showGame(gamePanel, game);
+        getContentPane().add(tmpPane, BorderLayout.CENTER);
+    }*/
 }
